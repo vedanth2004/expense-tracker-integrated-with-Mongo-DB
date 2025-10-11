@@ -211,8 +211,8 @@ Copy code
 ✅ Expense forecasting with LSTM model
 
 👨‍💻 Contributors
-Your Name — Developer & Researcher
-AI and Data Modules — Gemini & OpenAI Integrations
+Vedanth Reddy 
+AI and Data Modules — Gemini
 
 🛡️ License
 This project is licensed under the MIT License — you are free to use and modify it with credit.
@@ -221,6 +221,8 @@ This project is licensed under the MIT License — you are free to use and modif
 Add the following screenshots for documentation:
 
 📊 Dashboard Overview
+<img width="1919" height="953" alt="image" src="https://github.com/user-attachments/assets/62d278b7-be23-4466-94b3-1e97d1e6f3ab" />
+
 
 💡 AI Financial Insights
 
@@ -229,5 +231,6 @@ Add the following screenshots for documentation:
 📈 Stock Trends Visualization
 
 🎯 Gamification & Achievements
+
 
 

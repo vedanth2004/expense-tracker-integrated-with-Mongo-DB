@@ -52,9 +52,9 @@ An advanced **personal finance web application** built with **Streamlit** that h
 ## ⚙️ Installation Guide
 
 ### 1️⃣ Clone the Repository
-```bash
 git clone https://github.com/your-username/expense-tracker.git
 cd expense-tracker
+
 2️⃣ Create a Virtual Environment
 bash
 Copy code
@@ -156,3 +156,4 @@ Now you can send reports via email directly from:
 👨‍💻 Contributors
 Vedanth Reddy — Developer & Researcher
 AI and Data Modules — GPT-powered Integrations
+

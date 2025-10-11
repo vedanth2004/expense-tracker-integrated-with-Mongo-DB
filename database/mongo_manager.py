@@ -5,27 +5,37 @@ from pymongo import MongoClient, ASCENDING, DESCENDING
 import streamlit as st
 from config.settings import settings
 from bson.objectid import ObjectId
+import os
 
 # -----------------------------
-# Cached MongoDB client
+# MongoDB Client
 # -----------------------------
 @st.cache_resource
 def get_client():
-    mongo_uri = settings.MONGO_URI
+    """
+    Cached MongoDB client connection for performance.
+    Works for both local and Streamlit Cloud environments.
+    """
+    mongo_uri = settings.MONGO_URI or os.getenv("MONGO_URI")
     if not mongo_uri:
         raise RuntimeError(
-            "MongoDB URI not set. Put it in .streamlit/secrets.toml as 'MONGO_URI' or set MONGO_URI env var."
+            "MongoDB URI not set. Add it to .streamlit/secrets.toml as 'MONGO_URI' or set MONGO_URI environment variable."
         )
-    return MongoClient(mongo_uri, tls=True, serverSelectionTimeoutMS=10000)
 
-# Use a single client and db for all operations
-client = get_client()
-db = client["expense_tracker"]
+    try:
+        return MongoClient(mongo_uri, serverSelectionTimeoutMS=10000, tls=True)
+    except Exception as e:
+        logging.error(f"MongoDB connection failed: {e}")
+        raise
 
-# -----------------------------
-# Create indexes once at startup
-# -----------------------------
-def init_indexes():
+def init_db():
+    """
+    Initialize the MongoDB database and create indexes if they don't exist.
+    Returns the database handle.
+    """
+    client = get_client()
+    db = client["expense_tracker"]
+
     try:
         db.users.create_index([("email", ASCENDING)], unique=True)
         db.expenses.create_index([("user_id", ASCENDING), ("date", DESCENDING)])
@@ -35,12 +45,14 @@ def init_indexes():
     except Exception as e:
         logging.warning(f"Index creation error: {e}")
 
-init_indexes()
+    return db
+
 
 # -----------------------------
 # Users
 # -----------------------------
 def create_user(name: str, email: str, password_hash: bytes):
+    db = init_db()
     try:
         res = db.users.insert_one({
             "name": name,
@@ -54,27 +66,26 @@ def create_user(name: str, email: str, password_hash: bytes):
         return None
 
 def get_user_by_email(email: str):
+    db = init_db()
     return db.users.find_one({"email": email})
 
 def get_user_by_id(user_id: str):
-    return db.users.find_one({"_id": ObjectId(user_id)})
+    db = init_db()
+    return db.users.find_one({"_id": str(user_id)})
 
-def get_user(user_id: str):
-    user = db.users.find_one({"_id": ObjectId(user_id)})
-    if not user:
-        return None
-    user["_id"] = str(user["_id"])
-    return user
 
 # -----------------------------
 # Expenses
 # -----------------------------
-def add_expense(user_id: str, amount: float, category: str, note: str="", date=None, currency: str="USD", receipt_text: str=""):
+def add_expense(user_id: str, amount: float, category: str, note: str = "", date=None, currency: str = "USD", receipt_text: str = ""):
+    db = init_db()
     uid = str(user_id)
+
     if date and isinstance(date, datetime.date) and not isinstance(date, datetime.datetime):
         date = datetime.datetime.combine(date, datetime.datetime.min.time())
     elif not date:
         date = datetime.datetime.utcnow()
+
     doc = {
         "user_id": uid,
         "amount": float(amount),
@@ -85,6 +96,7 @@ def add_expense(user_id: str, amount: float, category: str, note: str="", date=N
         "receipt_text": receipt_text,
         "created_at": datetime.datetime.utcnow()
     }
+
     try:
         db.expenses.insert_one(doc)
         return True
@@ -92,7 +104,8 @@ def add_expense(user_id: str, amount: float, category: str, note: str="", date=N
         logging.error(f"add_expense error: {e}")
         return False
 
-def list_expenses(user_id: str, limit: int=200):
+def list_expenses(user_id: str, limit: int = 200):
+    db = init_db()
     uid = str(user_id)
     cursor = db.expenses.find({"user_id": uid}).sort("date", DESCENDING).limit(limit)
     rows = []
@@ -103,6 +116,7 @@ def list_expenses(user_id: str, limit: int=200):
     return rows
 
 def delete_expense(expense_id: str, user_id: str) -> bool:
+    db = init_db()
     try:
         res = db.expenses.delete_one({"_id": ObjectId(expense_id), "user_id": str(user_id)})
         return res.deleted_count > 0
@@ -110,15 +124,19 @@ def delete_expense(expense_id: str, user_id: str) -> bool:
         logging.error(f"delete_expense error: {e}")
         return False
 
+
 # -----------------------------
 # Income
 # -----------------------------
-def add_income(user_id: str, amount: float, source: str, date=None, currency: str="USD"):
+def add_income(user_id: str, amount: float, source: str, date=None, currency: str = "USD"):
+    db = init_db()
     uid = str(user_id)
+
     if date and isinstance(date, datetime.date) and not isinstance(date, datetime.datetime):
         date = datetime.datetime.combine(date, datetime.datetime.min.time())
     elif not date:
         date = datetime.datetime.utcnow()
+
     doc = {
         "user_id": uid,
         "amount": float(amount),
@@ -127,6 +145,7 @@ def add_income(user_id: str, amount: float, source: str, date=None, currency: st
         "currency": currency,
         "created_at": datetime.datetime.utcnow()
     }
+
     try:
         db.income.insert_one(doc)
         return True
@@ -134,7 +153,8 @@ def add_income(user_id: str, amount: float, source: str, date=None, currency: st
         logging.error(f"add_income error: {e}")
         return False
 
-def list_income(user_id: str, limit: int=200):
+def list_income(user_id: str, limit: int = 200):
+    db = init_db()
     uid = str(user_id)
     cursor = db.income.find({"user_id": uid}).sort("date", DESCENDING).limit(limit)
     rows = []
@@ -148,10 +168,12 @@ def list_income(user_id: str, limit: int=200):
         })
     return rows
 
+
 # -----------------------------
 # Budgets
 # -----------------------------
 def set_budget(user_id: str, category: str, monthly_limit: float):
+    db = init_db()
     uid = str(user_id)
     db.budgets.update_one(
         {"user_id": uid, "category": category},
@@ -161,13 +183,16 @@ def set_budget(user_id: str, category: str, monthly_limit: float):
     return True
 
 def list_budgets(user_id: str):
+    db = init_db()
     uid = str(user_id)
     return list(db.budgets.find({"user_id": uid}))
 
+
 # -----------------------------
-# Shared Accounts
+# Shared Accounts / Collaboration
 # -----------------------------
 def invite_share(owner_id: str, member_email: str):
+    db = init_db()
     uid = str(owner_id)
     try:
         db.shares.insert_one({
@@ -181,6 +206,7 @@ def invite_share(owner_id: str, member_email: str):
         return False
 
 def list_shares(owner_id: str):
+    db = init_db()
     uid = str(owner_id)
     cursor = db.shares.find({"owner_id": uid})
     out = []
@@ -191,20 +217,33 @@ def list_shares(owner_id: str):
         })
     return out
 
+
 # -----------------------------
-# Gemini API
+# Gemini API Key
 # -----------------------------
 def save_gemini_api_key(user_id, api_key):
+    db = init_db()
     db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"gemini_api_key": api_key}})
 
 def get_gemini_api_key(user_id):
+    db = init_db()
     user = db.users.find_one({"_id": ObjectId(user_id)}, {"gemini_api_key": 1})
     return user.get("gemini_api_key") if user else None
 
+
 # -----------------------------
-# Expense summary
+# Helper Functions
 # -----------------------------
+def get_user(user_id: str):
+    db = init_db()
+    user = db.users.find_one({"_id": user_id})
+    if not user:
+        return None
+    user["_id"] = str(user["_id"])
+    return user
+
 def get_expense_summary(user_id: str):
+    db = init_db()
     uid = str(user_id)
     pipeline = [
         {"$match": {"user_id": uid}},

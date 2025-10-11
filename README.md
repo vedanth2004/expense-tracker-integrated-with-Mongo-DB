@@ -104,33 +104,30 @@ expense_tracker/
 ```bash
 git clone https://github.com/your-username/expense-tracker.git
 cd expense-tracker
+
+
 2️⃣ Create a Virtual Environment
-bash
-Copy code
 python -m venv venv
 # Activate it:
 # On Windows:
 venv\Scripts\activate
 # On macOS/Linux:
 source venv/bin/activate
+
+
 3️⃣ Install Dependencies
-bash
-Copy code
 pip install -r requirements.txt
+
+
 🛢️ 4️⃣ MongoDB Setup
 Go to MongoDB Atlas.
-
 Create a free cluster.
-
 Copy your connection string (URI).
-
 Update your config/settings.py file with:
-
-python
-Copy code
 MONGO_URI = "mongodb+srv://<username>:<password>@cluster.mongodb.net/expense_db"
 SECRET_KEY = "your-secret-key"
 CURRENCY_BASE = "INR"
+
 
 # Email credentials
 EMAIL_USER = "your_email@gmail.com"
@@ -196,6 +193,7 @@ Now you can send reports via email directly from:
 👨‍💻 Contributors
 Vedanth Reddy 
 AI and Data Modules — GPT
+
 
 
 

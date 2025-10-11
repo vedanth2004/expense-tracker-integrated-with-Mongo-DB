@@ -11,11 +11,11 @@ import os
 # -----------------------------
 # MongoDB Client
 # -----------------------------
-client = MongoClient(os.getenv("MONGO_URI"))
+client = MongoClient("mongodb+srv://shapuramvedanthreddy_db_user:kyNIkrEaOzK5Ovuc@cluster0.7e1g9hm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["expense_tracker"]
 @st.cache_resource
 def get_client():
-    mongo_uri = ""mongodb+srv://shapuramvedanthreddy_db_user:kyNIkrEaOzK5Ovuc@cluster0.7e1g9hm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0""
+    mongo_uri = "mongodb+srv://shapuramvedanthreddy_db_user:kyNIkrEaOzK5Ovuc@cluster0.7e1g9hm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     if not mongo_uri:
         raise RuntimeError(
             "MongoDB URI not set. Put it in .streamlit/secrets.toml as 'mongo_uri' or set MONGO_URI env var."

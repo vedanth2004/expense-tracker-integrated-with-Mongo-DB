@@ -1,6 +1,3 @@
-Absolutely! Here’s your **entire README.md content** including the project description, features, and full installation guide, **all in proper Markdown format** ready to copy-paste:
-
-````markdown
 # 💸 AI-Powered Expense Tracker
 
 An advanced **personal finance web application** built with **Streamlit** that helps users track expenses, manage budgets, generate AI-driven financial insights, and even receive automated email reports — all in one interactive dashboard.
@@ -177,5 +174,6 @@ EMAIL_PASS = "your_generated_app_password"
 
 * Vedanth Reddy — Developer & Researcher
 * AI and Data Modules — GPT-powered Integrations
+
 
 

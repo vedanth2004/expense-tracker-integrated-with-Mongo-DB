@@ -49,62 +49,60 @@ An advanced **personal finance web application** built with **Streamlit** that h
 
 
 
+## ⚙️ Installation Guide
 
-## ⚙️ Installation Guid
-
-1️⃣ Clone the Repository
-bash
+Clone the repository and navigate into the folder:
+```bash
 git clone https://github.com/your-username/expense-tracker.git
 cd expense-tracker
+Create a virtual environment:
 
-
-2️⃣ Create a Virtual Environment
+bash
+Copy code
 python -m venv venv
-# Activate it:
-# On Windows:
+Activate the virtual environment:
+
+On Windows:
+
+bash
+Copy code
 venv\Scripts\activate
-# On macOS/Linux:
+On macOS/Linux:
+
+bash
+Copy code
 source venv/bin/activate
+Install dependencies:
 
-
-3️⃣ Install Dependencies
+bash
+Copy code
 pip install -r requirements.txt
+Set up MongoDB by creating a free cluster on MongoDB Atlas. Copy your connection string (URI) and update config/settings.py with:
 
-
-🛢️ 4️⃣ MongoDB Setup
-Go to MongoDB Atlas.
-Create a free cluster.
-Copy your connection string (URI).
-Update your config/settings.py file with:
+python
+Copy code
 MONGO_URI = "mongodb+srv://<username>:<password>@cluster.mongodb.net/expense_db"
 SECRET_KEY = "your-secret-key"
 CURRENCY_BASE = "INR"
-Email credentials
+
+# Email credentials
 EMAIL_USER = "your_email@gmail.com"
 EMAIL_PASS = "your_app_password"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
+Set up Gemini API (for AI Insights) by visiting Google AI Studio and generating your Gemini API Key. Launch the app, go to Settings → Gemini API Configuration, paste your key, and save.
 
+Run the Streamlit app:
 
-🧠 5️⃣ Gemini API Setup (AI Insights)
-Visit Google AI Studio.
-Generate your Gemini API key.
-Launch the app, go to:
-
-
-⚙️ Settings → 🔑 Gemini API Configuration
-Paste your API key and click Save.
-
-▶️ 6️⃣ Run the App
 bash
 Copy code
 streamlit run app.py
-Once the server starts, open the app in your browser:
-http://localhost:8501
+Once the server starts, open your browser at http://localhost:8501.
 
+Dependencies used (also in requirements.txt):
 
-🧩 Dependencies
-These are the key libraries used (in requirements.txt):
+nginx
+Copy code
 streamlit
 pymongo
 pandas
@@ -118,37 +116,21 @@ google-generativeai
 email-validator
 matplotlib
 plotly
+Optional: To enable sending daily email reports, turn on 2-Step Verification in Gmail, go to Google Account → Security → App Passwords, generate an app password, and use it as EMAIL_PASS in config/settings.py. You can now send reports via Settings → Send Daily Report.
 
+Future enhancements planned: push notifications for budget overspending, integration with UPI/banking APIs for real-time transactions, mobile responsive layout, multi-language support, receipt AI auto-categorization, expense forecasting with LSTM models.
 
-📧 Email Report Setup (Optional)
-To enable email delivery of daily reports:
-Turn on 2-Step Verification in your Gmail account.
-Go to:
-Google Account → Security → App Passwords
-Generate a new app password.
-Use this password in your config/settings.py:
-EMAIL_PASS = "your_generated_app_password"
-Now you can send reports via email directly from:
-⚙️ Settings → 📧 Send Daily Report
+Contributors: Vedanth Reddy — Developer & Researcher. AI and Data modules powered by GPT.
 
+pgsql
+Copy code
 
-🏅 Future Enhancements
-✅ Push notifications for budget overspending
-✅ Integration with UPI or banking APIs for real-time transactions
-✅ Mobile responsive layout
-✅ Multi-language support
-✅ Receipt AI auto-categorization
-✅ Expense forecasting with LSTM model
+This is **all in one continuous block**, no numbering, no splitting — ready to paste in your `README.md`.  
 
-👨‍💻 Contributors
-Vedanth Reddy 
-AI and Data Modules — GPT
+If you want, I can also make a **full README.md** including **project structure, features, screenshots, and license** in the same single-copy format. Do you want me to do that?
 
 
 
-
-
----
 
 
 

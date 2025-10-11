@@ -97,10 +97,6 @@ expense_tracker/
 │
 └── requirements.txt # Python dependencies
 
-yaml
-Copy code
-
----
 
 ## ⚙️ Installation Guide
 
@@ -141,15 +137,14 @@ EMAIL_USER = "your_email@gmail.com"
 EMAIL_PASS = "your_app_password"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
+
+
 🧠 5️⃣ Gemini API Setup (AI Insights)
 Visit Google AI Studio.
-
 Generate your Gemini API key.
-
 Launch the app, go to:
 
-pgsql
-Copy code
+
 ⚙️ Settings → 🔑 Gemini API Configuration
 Paste your API key and click Save.
 
@@ -158,15 +153,11 @@ bash
 Copy code
 streamlit run app.py
 Once the server starts, open the app in your browser:
-
-arduino
-Copy code
 http://localhost:8501
+
+
 🧩 Dependencies
 These are the key libraries used (in requirements.txt):
-
-nginx
-Copy code
 streamlit
 pymongo
 pandas
@@ -180,22 +171,15 @@ google-generativeai
 email-validator
 matplotlib
 plotly
+
+
 📧 Email Report Setup (Optional)
 To enable email delivery of daily reports:
-
 Turn on 2-Step Verification in your Gmail account.
-
 Go to:
-
-nginx
-Copy code
 Google Account → Security → App Passwords
 Generate a new app password.
-
 Use this password in your config/settings.py:
-
-python
-Copy code
 EMAIL_PASS = "your_generated_app_password"
 Now you can send reports via email directly from:
 ⚙️ Settings → 📧 Send Daily Report
@@ -211,7 +195,8 @@ Now you can send reports via email directly from:
 
 👨‍💻 Contributors
 Vedanth Reddy 
-AI and Data Modules — Gemini
+AI and Data Modules — GPT
+
 
 
 

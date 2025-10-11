@@ -1,51 +1,23 @@
-# database/mongo_manager.py
-import datetime
+from pymongo import MongoClient
+from config import settings
 import logging
-from pymongo import MongoClient, ASCENDING, DESCENDING
 import streamlit as st
-from config.settings import settings
-from bson.objectid import ObjectId
-import os
-from urllib.parse import quote_plus
 
-# -----------------------------
-# MongoDB Client
-# -----------------------------
 @st.cache_resource
 def get_client():
-    """
-    Cached MongoDB client connection for performance.
-    Works for both local and Streamlit Cloud environments.
-    """
-    # ✅ Always read URI from environment or Streamlit secrets first
-    mongo_uri = (
-        os.getenv("MONGO_URI")
-        or st.secrets.get("MONGO_URI")
-        or "mongodb+srv://shapuramvedanthreddy_db_user:kyNIkrEaOzK5Ovuc@cluster0.7e1g9hm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-    )
-
-    if not mongo_uri:
-        raise RuntimeError(
-            "MongoDB URI not set. Please configure 'MONGO_URI' in Streamlit secrets or environment variables."
-        )
-
     try:
-        # ✅ Add connectTimeoutMS and retryWrites options for deployment stability
         client = MongoClient(
-            mongo_uri,
+            settings.MONGO_URI,
             serverSelectionTimeoutMS=15000,
-            connectTimeoutMS=10000,
-            retryWrites=True,
-            tls=True
+            tls=True,
+            tlsAllowInvalidCertificates=True  # <-- added line
         )
-        # Quick test: ping MongoDB server
         client.admin.command("ping")
         logging.info("✅ MongoDB connection successful.")
         return client
     except Exception as e:
         logging.error(f"❌ MongoDB connection failed: {e}")
         raise RuntimeError("Failed to connect to MongoDB. Check URI or network access.")
-
 # -----------------------------
 # Initialize DB
 # -----------------------------

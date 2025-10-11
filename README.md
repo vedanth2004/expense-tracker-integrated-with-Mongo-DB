@@ -101,12 +101,12 @@ expense_tracker/
 ## ⚙️ Installation Guide
 
 ### 1️⃣ Clone the Repository
-```bash
+bash
 git clone https://github.com/your-username/expense-tracker.git
 cd expense-tracker
 
 
-2️⃣ Create a Virtual Environment
+###2️⃣ Create a Virtual Environment
 python -m venv venv
 # Activate it:
 # On Windows:
@@ -115,11 +115,11 @@ venv\Scripts\activate
 source venv/bin/activate
 
 
-3️⃣ Install Dependencies
+###3️⃣ Install Dependencies
 pip install -r requirements.txt
 
 
-🛢️ 4️⃣ MongoDB Setup
+###🛢️ 4️⃣ MongoDB Setup
 Go to MongoDB Atlas.
 Create a free cluster.
 Copy your connection string (URI).
@@ -127,25 +127,23 @@ Update your config/settings.py file with:
 MONGO_URI = "mongodb+srv://<username>:<password>@cluster.mongodb.net/expense_db"
 SECRET_KEY = "your-secret-key"
 CURRENCY_BASE = "INR"
-
-
-# Email credentials
+Email credentials
 EMAIL_USER = "your_email@gmail.com"
 EMAIL_PASS = "your_app_password"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 
 
-🧠 5️⃣ Gemini API Setup (AI Insights)
+###🧠 5️⃣ Gemini API Setup (AI Insights)
 Visit Google AI Studio.
 Generate your Gemini API key.
 Launch the app, go to:
 
 
-⚙️ Settings → 🔑 Gemini API Configuration
+###⚙️ Settings → 🔑 Gemini API Configuration
 Paste your API key and click Save.
 
-▶️ 6️⃣ Run the App
+###▶️ 6️⃣ Run the App
 bash
 Copy code
 streamlit run app.py
@@ -153,7 +151,7 @@ Once the server starts, open the app in your browser:
 http://localhost:8501
 
 
-🧩 Dependencies
+###🧩 Dependencies
 These are the key libraries used (in requirements.txt):
 streamlit
 pymongo
@@ -170,7 +168,7 @@ matplotlib
 plotly
 
 
-📧 Email Report Setup (Optional)
+###📧 Email Report Setup (Optional)
 To enable email delivery of daily reports:
 Turn on 2-Step Verification in your Gmail account.
 Go to:
@@ -182,7 +180,7 @@ Now you can send reports via email directly from:
 ⚙️ Settings → 📧 Send Daily Report
 
 
-🏅 Future Enhancements
+###🏅 Future Enhancements
 ✅ Push notifications for budget overspending
 ✅ Integration with UPI or banking APIs for real-time transactions
 ✅ Mobile responsive layout
@@ -190,9 +188,10 @@ Now you can send reports via email directly from:
 ✅ Receipt AI auto-categorization
 ✅ Expense forecasting with LSTM model
 
-👨‍💻 Contributors
+###👨‍💻 Contributors
 Vedanth Reddy 
 AI and Data Modules — GPT
+
 
 
 

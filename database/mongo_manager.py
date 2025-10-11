@@ -6,6 +6,7 @@ import streamlit as st
 from config.settings import settings
 from bson.objectid import ObjectId
 import os
+from urllib.parse import quote_plus
 
 # -----------------------------
 # MongoDB Client
@@ -16,22 +17,41 @@ def get_client():
     Cached MongoDB client connection for performance.
     Works for both local and Streamlit Cloud environments.
     """
-    mongo_uri = "mongodb+srv://shapuramvedanthreddy_db_user:kyNIkrEaOzK5Ovuc@cluster0.7e1g9hm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    # ✅ Always read URI from environment or Streamlit secrets first
+    mongo_uri = (
+        os.getenv("MONGO_URI")
+        or st.secrets.get("MONGO_URI")
+        or "mongodb+srv://shapuramvedanthreddy_db_user:kyNIkrEaOzK5Ovuc@cluster0.7e1g9hm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    )
+
     if not mongo_uri:
         raise RuntimeError(
-            "MongoDB URI not set. Add it to .streamlit/secrets.toml as 'MONGO_URI' or set MONGO_URI environment variable."
+            "MongoDB URI not set. Please configure 'MONGO_URI' in Streamlit secrets or environment variables."
         )
 
     try:
-        return MongoClient(mongo_uri, serverSelectionTimeoutMS=10000, tls=True)
+        # ✅ Add connectTimeoutMS and retryWrites options for deployment stability
+        client = MongoClient(
+            mongo_uri,
+            serverSelectionTimeoutMS=15000,
+            connectTimeoutMS=10000,
+            retryWrites=True,
+            tls=True
+        )
+        # Quick test: ping MongoDB server
+        client.admin.command("ping")
+        logging.info("✅ MongoDB connection successful.")
+        return client
     except Exception as e:
-        logging.error(f"MongoDB connection failed: {e}")
-        raise
+        logging.error(f"❌ MongoDB connection failed: {e}")
+        raise RuntimeError("Failed to connect to MongoDB. Check URI or network access.")
 
+# -----------------------------
+# Initialize DB
+# -----------------------------
 def init_db():
     """
-    Initialize the MongoDB database and create indexes if they don't exist.
-    Returns the database handle.
+    Initialize MongoDB database and indexes if not already created.
     """
     client = get_client()
     db = client["expense_tracker"]
@@ -43,13 +63,12 @@ def init_db():
         db.budgets.create_index([("user_id", ASCENDING), ("category", ASCENDING)], unique=True)
         db.shares.create_index([("owner_id", ASCENDING), ("member_email", ASCENDING)], unique=True)
     except Exception as e:
-        logging.warning(f"Index creation error: {e}")
+        logging.warning(f"⚠️ Index creation warning: {e}")
 
     return db
 
-
 # -----------------------------
-# Users
+# User Management
 # -----------------------------
 def create_user(name: str, email: str, password_hash: bytes):
     db = init_db()
@@ -72,7 +91,6 @@ def get_user_by_email(email: str):
 def get_user_by_id(user_id: str):
     db = init_db()
     return db.users.find_one({"_id": str(user_id)})
-
 
 # -----------------------------
 # Expenses
@@ -124,7 +142,6 @@ def delete_expense(expense_id: str, user_id: str) -> bool:
         logging.error(f"delete_expense error: {e}")
         return False
 
-
 # -----------------------------
 # Income
 # -----------------------------
@@ -168,7 +185,6 @@ def list_income(user_id: str, limit: int = 200):
         })
     return rows
 
-
 # -----------------------------
 # Budgets
 # -----------------------------
@@ -187,9 +203,8 @@ def list_budgets(user_id: str):
     uid = str(user_id)
     return list(db.budgets.find({"user_id": uid}))
 
-
 # -----------------------------
-# Shared Accounts / Collaboration
+# Shared Accounts
 # -----------------------------
 def invite_share(owner_id: str, member_email: str):
     db = init_db()
@@ -217,7 +232,6 @@ def list_shares(owner_id: str):
         })
     return out
 
-
 # -----------------------------
 # Gemini API Key
 # -----------------------------
@@ -229,7 +243,6 @@ def get_gemini_api_key(user_id):
     db = init_db()
     user = db.users.find_one({"_id": ObjectId(user_id)}, {"gemini_api_key": 1})
     return user.get("gemini_api_key") if user else None
-
 
 # -----------------------------
 # Helper Functions

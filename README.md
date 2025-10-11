@@ -198,10 +198,9 @@ python
 Copy code
 EMAIL_PASS = "your_generated_app_password"
 Now you can send reports via email directly from:
-
-rust
-Copy code
 ⚙️ Settings → 📧 Send Daily Report
+
+
 🏅 Future Enhancements
 ✅ Push notifications for budget overspending
 ✅ Integration with UPI or banking APIs for real-time transactions
@@ -214,23 +213,8 @@ Copy code
 Vedanth Reddy 
 AI and Data Modules — Gemini
 
-🛡️ License
-This project is licensed under the MIT License — you are free to use and modify it with credit.
-
-📸 Screenshots (Optional)
-Add the following screenshots for documentation:
-
-📊 Dashboard Overview
-<img width="1919" height="953" alt="image" src="https://github.com/user-attachments/assets/62d278b7-be23-4466-94b3-1e97d1e6f3ab" />
 
 
-💡 AI Financial Insights
-
-🧾 OCR Receipt Upload
-
-📈 Stock Trends Visualization
-
-🎯 Gamification & Achievements
 
 
 

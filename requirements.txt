@@ -1,0 +1,21 @@
+# Core
+streamlit
+pymongo
+bcrypt
+pandas
+plotly
+pillow
+pytesseract
+requests
+python-dotenv
+reportlab
+email-validator
+streamlit-lottie
+pydantic
+matplotlib
+pandas
+reportlab
+google-generativeai
+pydantic_settings
+# Optional / helper packages
+numpy

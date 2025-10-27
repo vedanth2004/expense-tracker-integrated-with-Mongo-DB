@@ -2,6 +2,10 @@
 
 An advanced **personal finance web application** built with **Streamlit** that helps users track expenses, manage budgets, generate AI-driven financial insights, and even receive automated email reports — all in one interactive dashboard.
 
+## 🌐 Live Demo
+
+Try the application live: [https://expense-tracker-integrated-with-mongo-db-4wxxrjxqncwvwjhhojvun.streamlit.app/](https://expense-tracker-integrated-with-mongo-db-4wxxrjxqncwvwjhhojvun.streamlit.app/)
+
 ---
 
 ## 🚀 Features
@@ -174,6 +178,7 @@ EMAIL_PASS = "your_generated_app_password"
 
 * Vedanth Reddy — Developer & Researcher
 * AI and Data Modules — GPT-powered Integrations
+
 
 
 
